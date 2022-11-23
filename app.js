@@ -25,11 +25,11 @@ function getPlayerNames() {
     }else{
         playerOne.name = playerOneInput.value;
         playerTwo.name = playerTwoInput.value;
-        removePlayerSelection();
-        console.log(playerOne, playerTwo);
-        placeCards();
+        startGame();
     }
 }
+
+
 
 startButton.addEventListener('click', getPlayerNames);
 // END PLAYER SELECTION SECTION 1
@@ -45,21 +45,38 @@ function CreateNewCard(cardImg){
     let newCard = document.createElement("article");
     newCard.innerHTML = newCardContent;
 
-    console.log(newCard);
     main.append(newCard);
 } 
 
 let setImgToCard = [
-    
-]
+    "bilder/dizzy-face.png",
+    "bilder/face-with-hand-over-mouth.png",
+    "bilder/face-with-tears-of-joy.png",
+    "bilder/money-mouth-face.png",
+    "bilder/nerd-face.png",
+    "bilder/poop.png",
+    "bilder/sleeping-face.png",
+    "bilder/smiling-face-with-halo.png",
+    "bilder/smiling-face-with-heart-eyes.png",
+    "bilder/star-struck.png",
+    "bilder/upside-down-face.png",
+    "bilder/zany-face.png"
+];
+
 function placeCards (){
-    for (let a = 0; a < 2; a++) {   
+    for (let a = 0; a < 2; a++) { // gör 2 gånger för att få ut 2 av varje kort
         for (let i = 0; i < setImgToCard.length; i++){
             CreateNewCard(
                 setImgToCard[i]
             )
         }  
     }
+}
+
+function startGame() {
+    removePlayerSelection(); // tar bort elementet för spelväljare.
+    placeCards();
+    
 }
 
 // Vi måste göra en mapp med bilder!!!!!!!

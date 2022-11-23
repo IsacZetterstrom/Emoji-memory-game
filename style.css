@@ -1,0 +1,7 @@
+main {
+   display: flex;
+   flex-wrap: wrap;
+   max-width: 1000px;
+   padding: 0 6rem 0 6rem;
+}
+
