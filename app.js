@@ -27,7 +27,7 @@ function getPlayerNames() {
         playerTwo.name = playerTwoInput.value;
         removePlayerSelection();
         console.log(playerOne, playerTwo);
-        CreateNewCard("bilder/face-with-tears-of-joy.png");
+        placeCards();
     }
 }
 
@@ -49,12 +49,17 @@ function CreateNewCard(cardImg){
     main.append(newCard);
 } 
 
-let setImgToCard = []
-function placeCards ()
-for (let i = 0; i < setImgToCard.length; i++){
-    CreateNewCard(
-        setImgToCard[i]
-    )
+let setImgToCard = [
+    
+]
+function placeCards (){
+    for (let a = 0; a < 2; a++) {   
+        for (let i = 0; i < setImgToCard.length; i++){
+            CreateNewCard(
+                setImgToCard[i]
+            )
+        }  
+    }
 }
 
 // Vi måste göra en mapp med bilder!!!!!!!
