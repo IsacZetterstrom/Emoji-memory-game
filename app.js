@@ -40,17 +40,22 @@ let main = document.querySelector("main");
 
 function CreateNewCard(cardImg){
     let newCardContent = `
-    <figure>
-    <img src=${cardImg}/>
-    </figure>
+    <img src=${cardImg}>
     `
-    let newCard = document.createElement("div");
+    let newCard = document.createElement("article");
     newCard.innerHTML = newCardContent;
 
     console.log(newCard);
-    //main.append(newCard);
+    main.append(newCard);
 } 
 
+let setImgToCard = []
+function placeCards ()
+for (let i = 0; i < setImgToCard.length; i++){
+    CreateNewCard(
+        setImgToCard[i]
+    )
+}
 
 // Vi måste göra en mapp med bilder!!!!!!!
 // okej!
