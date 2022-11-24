@@ -14,6 +14,9 @@ let playerTwo = {
     score: 0
 }
 
+let players = [playerOne, playerTwo];
+let gameTurn = 0;
+
 function removePlayerSelection() { //tar bort selection när man trycker på knappen "starta spelet"
     startSection.remove();
 }
@@ -36,7 +39,7 @@ startButton.addEventListener('click', getPlayerNames);
 
 let classListIndex = []; // Lista för att lagra våra class nummer
 let hiddenCard = "bilder/question-mark.png"; // baksida för korten
-let setImgToCard = [ // lägger till bilder till korten
+let images = [ // lägger till bilder till korten
     "bilder/dizzy-face.png",
     "bilder/face-with-hand-over-mouth.png",
     "bilder/face-with-tears-of-joy.png",
@@ -61,9 +64,9 @@ function createNewCard(cardImg){ //funktion för att lägga till kort
 
 function placeCards (){
     for (let a = 0; a < 2; a++) { // gör 2 gånger för att få ut 2 av varje kort
-        for (let i = 0; i < setImgToCard.length; i++){
+        for (let i = 0; i < images.length; i++){
             createNewCard(hiddenCard); // skapar kort
-            classListIndex.push(i + 1); // Lagrar ett nummer till klassen för korten
+            classListIndex.push(i); // Lagrar ett nummer till klassen för korten
         }
     }
 }
@@ -84,19 +87,85 @@ function giveCardClass(){
     }
 }
 
+// FIXA ------ ÄNDRA SIDEBAR
+function updateDisplays() {
+    let currentPlayer = players[gameTurn];
+    let asideContent = `<h3>${currentPlayer.name}s tur</h3>
+    <h4>Poäng</h4>
+    <p>${playerOne.score}</p>
+    <p>${playerTwo.score}</p>`;
+}
+function sideBar(){
+    updateDisplays()
+    let currentPlayer = players[gameTurn];
+    let asideContent = `<h3>${currentPlayer.name}s tur</h3>
+    <h4>Poäng</h4>
+    <p>${playerOne.score}</p>
+    <p>${playerTwo.score}</p>`; // skapar en mall för sidobar i spelet.
+    const container = document.querySelector(".wrap-container");
+    const aside = document.createElement("aside");
+    aside.innerHTML = asideContent;
+    container.append(aside);
+}
+
+// const articleListener = document.querySelectorAll('article');
+
+function addArticleListener() {
+    const articleListener = document.querySelectorAll('article');
+    for (const article of articleListener) {
+        article.addEventListener('click', (event) => {
+            flippedCard(event.currentTarget)
+        });
+    }
+}
+
+let flipCount = 0;
+let flippedCardClasses= [];
+function flippedCard (target){
+    
+    if (flipCount == 2) {
+        compareFlippedCards();
+        flipCount = 0;
+    };
+    let realCard = `<img src=${images[target.className]}>`;
+    target.innerHTML = realCard;
+    flippedCardClasses.push(target)
+    flipCount++;
+}
+
+function compareFlippedCards () {
+    if (flippedCardClasses[0].className == flippedCardClasses[1].className){
+        console.log(flippedCardClasses);
+        playerOne.score++;
+        console.log(playerOne.score);
+    } else if (flippedCardClasses[0].className != flippedCardClasses[1].className){
+        let backCard = `<img src=${hiddenCard}>`; // bildmall till listan
+        flippedCardClasses[0].innerHTML = backCard;
+        flippedCardClasses[1].innerHTML = backCard;
+        changePlayerTurn();
+        console.log(gameTurn);
+    }
+    flippedCardClasses = [];
+}
+
+function changePlayerTurn () {
+    gameTurn = (gameTurn + 1) % 2;
+}
+
 
 
 function startGame() { //funktioner som kallas på när spelet startas.
     removePlayerSelection();
+    sideBar();
     placeCards();
     shuffleClass();
     giveCardClass();
+    addArticleListener();
 }
-
 
 // TODO
 /*
-1. Gå igenom kåden helt!
-2. eventlistener för att veta när man klickar på korten
+
+1. eventlistener för att veta när man klickar på korten
 
 */
