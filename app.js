@@ -14,43 +14,29 @@ let playerTwo = {
     score: 0
 }
 
-function removePlayerSelection() {
+function removePlayerSelection() { //tar bort selection när man trycker på knappen "starta spelet"
     startSection.remove();
 }
 
-function getPlayerNames() {
+function getPlayerNames() { //tar emot spelarnas namn som är inskrivna
     if((playerOneInput.value.trim() == "" && playerTwoInput.value.trim() == "") ||
      (playerOneInput.value.trim() == "" || playerTwoInput.value.trim() == "")){
         alert("Fyll i namn på båda spelarna")
-    }else{
+    }else{  // Sätter vi namnen i playerOne och playerTwo
         playerOne.name = playerOneInput.value;
         playerTwo.name = playerTwoInput.value;
-        startGame();
+        startGame();    // startar vi spelet
     }
 }
-
-
 
 startButton.addEventListener('click', getPlayerNames);
 // END PLAYER SELECTION SECTION 1
 
 // GAME SECTION
 
-let main = document.querySelector("main");
-
-function CreateNewCard(cardImg){
-    let randomClassNumber = Math.floor(Math.random()* (12-1) + 1);
-    let newCardContent = `
-    <img src=${cardImg}>
-    `
-    let newCard = document.createElement("article");
-    newCard.classList.add(randomClassNumber);
-    newCard.innerHTML = newCardContent;
-
-    main.append(newCard);
-} 
-let hiddenCard = "bilder/hidden.png";
-let setImgToCard = [
+let classListIndex = []; // Lista för att lagra våra class nummer
+let hiddenCard = "bilder/question-mark.png"; // baksida för korten
+let setImgToCard = [ // lägger till bilder till korten
     "bilder/dizzy-face.png",
     "bilder/face-with-hand-over-mouth.png",
     "bilder/face-with-tears-of-joy.png",
@@ -64,25 +50,53 @@ let setImgToCard = [
     "bilder/upside-down-face.png",
     "bilder/zany-face.png"
 ];
+let main = document.querySelector("main"); // ta ut main i DOM
+
+function createNewCard(cardImg){ //funktion för att lägga till kort
+    let newCardContent = `<img src=${cardImg}>`; // bildmall till listan
+    let newCard = document.createElement("article"); // skapar elementet "article"
+    newCard.innerHTML = newCardContent; //lägger i värdet från newCardContent till "newCard".
+    main.append(newCard); // Lägg ut kortet
+} 
 
 function placeCards (){
     for (let a = 0; a < 2; a++) { // gör 2 gånger för att få ut 2 av varje kort
         for (let i = 0; i < setImgToCard.length; i++){
-            CreateNewCard(
-                setImgToCard[i] // hiddenCard istället
-            )
-        }  
+            createNewCard(hiddenCard); // skapar kort
+            classListIndex.push(i + 1); // Lagrar ett nummer till klassen för korten
+        }
     }
 }
 
-function startGame() {
-    removePlayerSelection(); // tar bort elementet för spelväljare.
-    placeCards();
-    
+function shuffleClass (){
+    // lösning hittad på: https://sebhastian.com/shuffle-array-javascript/
+    // hur sort fungerar https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
+    let shuffledNumbers = classListIndex.sort( () => { //blandar alla nummer i "classListIndex"
+        return Math.random() - 0.5; 
+    });
+    return shuffledNumbers; // Ger tillbaka dom blandade numren
 }
 
-// Vi måste göra en mapp med bilder!!!!!!!
-// okej!
-//JUST JA! man glömmer bort när man nöter kod xD
+function giveCardClass(){
+    for (let i = 0; i < classListIndex.length; i++){ //lägger till ett klassnamn till "classListIndex"
+        main.children[i].className = classListIndex[i];
+        // För varje article i main, ge den ett klassnamn från classListIndex[i]
+    }
+}
 
 
+
+function startGame() { //funktioner som kallas på när spelet startas.
+    removePlayerSelection();
+    placeCards();
+    shuffleClass();
+    giveCardClass();
+}
+
+
+// TODO
+/*
+1. Gå igenom kåden helt!
+2. eventlistener för att veta när man klickar på korten
+
+*/
