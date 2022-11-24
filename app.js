@@ -39,15 +39,17 @@ startButton.addEventListener('click', getPlayerNames);
 let main = document.querySelector("main");
 
 function CreateNewCard(cardImg){
+    let randomClassNumber = Math.floor(Math.random()* (12-1) + 1);
     let newCardContent = `
     <img src=${cardImg}>
     `
     let newCard = document.createElement("article");
+    newCard.classList.add(randomClassNumber);
     newCard.innerHTML = newCardContent;
 
     main.append(newCard);
 } 
-
+let hiddenCard = "bilder/hidden.png";
 let setImgToCard = [
     "bilder/dizzy-face.png",
     "bilder/face-with-hand-over-mouth.png",
@@ -67,7 +69,7 @@ function placeCards (){
     for (let a = 0; a < 2; a++) { // gör 2 gånger för att få ut 2 av varje kort
         for (let i = 0; i < setImgToCard.length; i++){
             CreateNewCard(
-                setImgToCard[i]
+                setImgToCard[i] // hiddenCard istället
             )
         }  
     }
@@ -82,3 +84,5 @@ function startGame() {
 // Vi måste göra en mapp med bilder!!!!!!!
 // okej!
 //JUST JA! man glömmer bort när man nöter kod xD
+
+
