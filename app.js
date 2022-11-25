@@ -34,7 +34,7 @@ function getPlayerNames() { //tar emot spelarnas namn som är inskrivna
 
 startButton.addEventListener('click', getPlayerNames);
 // END PLAYER SELECTION SECTION 1
-
+// -----------------------------------------------------------------------
 // GAME SECTION
 
 let classListIndex = []; // Lista för att lagra våra class nummer
@@ -53,6 +53,7 @@ let images = [ // lägger till bilder till korten
     "bilder/upside-down-face.png",
     "bilder/zany-face.png"
 ];
+
 let main = document.querySelector("main"); // ta ut main i DOM
 
 function createNewCard(cardImg){ //funktion för att lägga till kort
@@ -97,6 +98,7 @@ function updateDisplays() {
     <p>${playerTwo.score}</p>`;
     aside.innerHTML = asideContent;
 }
+
 function sideBar(){
     let currentPlayer = players[gameTurn];
     let asideContent = `<h3>${currentPlayer.name}s tur</h3>
@@ -118,6 +120,7 @@ function addArticleListener() {
         });
     }
 }
+
 let flippedCardsList = [];
 function flippedCard (card) {
     flippedCardsList.push(card.className);
@@ -143,9 +146,6 @@ function compareFlippedCard () {
 function changePlayerTurn () {
     gameTurn = (gameTurn + 1) % 2;
 }
-
-
-
 
 
 function startGame() { //funktioner som kallas på när spelet startas.
