@@ -89,14 +89,15 @@ function giveCardClass(){
 
 // FIXA ------ ÄNDRA SIDEBAR
 function updateDisplays() {
+    let aside = document.querySelector("aside");
     let currentPlayer = players[gameTurn];
     let asideContent = `<h3>${currentPlayer.name}s tur</h3>
     <h4>Poäng</h4>
     <p>${playerOne.score}</p>
     <p>${playerTwo.score}</p>`;
+    aside.innerHTML = asideContent;
 }
 function sideBar(){
-    updateDisplays()
     let currentPlayer = players[gameTurn];
     let asideContent = `<h3>${currentPlayer.name}s tur</h3>
     <h4>Poäng</h4>
@@ -109,7 +110,6 @@ function sideBar(){
 }
 
 // const articleListener = document.querySelectorAll('article');
-
 function addArticleListener() {
     const articleListener = document.querySelectorAll('article');
     for (const article of articleListener) {
@@ -118,39 +118,33 @@ function addArticleListener() {
         });
     }
 }
-
-let flipCount = 0;
-let flippedCardClasses= [];
-function flippedCard (target){
-    
-    if (flipCount == 2) {
-        compareFlippedCards();
-        flipCount = 0;
-    };
-    let realCard = `<img src=${images[target.className]}>`;
-    target.innerHTML = realCard;
-    flippedCardClasses.push(target)
-    flipCount++;
+let flippedCardsList = [];
+function flippedCard (card) {
+    flippedCardsList.push(card.className);
+    if (flippedCardsList.length == 2){
+        compareFlippedCard ();
+        flippedCardsList = [];
+    }
 }
 
-function compareFlippedCards () {
-    if (flippedCardClasses[0].className == flippedCardClasses[1].className){
-        console.log(flippedCardClasses);
-        playerOne.score++;
-        console.log(playerOne.score);
-    } else if (flippedCardClasses[0].className != flippedCardClasses[1].className){
-        let backCard = `<img src=${hiddenCard}>`; // bildmall till listan
-        flippedCardClasses[0].innerHTML = backCard;
-        flippedCardClasses[1].innerHTML = backCard;
+function compareFlippedCard () {
+    let currentPlayer = players[gameTurn];
+    if (flippedCardsList[0] == flippedCardsList[1]) {
+        currentPlayer.score++;
+        updateDisplays();
+        console.log(currentPlayer.name);
+    } else {
         changePlayerTurn();
+        updateDisplays();
         console.log(gameTurn);
     }
-    flippedCardClasses = [];
 }
 
 function changePlayerTurn () {
     gameTurn = (gameTurn + 1) % 2;
 }
+
+
 
 
 
@@ -169,3 +163,42 @@ function startGame() { //funktioner som kallas på när spelet startas.
 1. eventlistener för att veta när man klickar på korten
 
 */
+
+
+
+
+
+
+
+// let flipCount = 0;
+// let flippedCardClasses= [];
+// function flippedCard (target){
+    
+//     if (flipCount == 2) {
+//         compareFlippedCards();
+//         flipCount = 0;
+//     };
+//     let realCard = `<img src=${images[target.className]}>`;
+//     target.innerHTML = realCard;
+//     flippedCardClasses.push(target)
+//     flipCount++;
+// }
+
+// function compareFlippedCards () {
+//     if (flippedCardClasses[0].className == flippedCardClasses[1].className){
+//         console.log(flippedCardClasses);
+//         playerOne.score++;
+//         console.log(playerOne.score);
+//     } else if (flippedCardClasses[0].className != flippedCardClasses[1].className){
+//         let backCard = `<img src=${hiddenCard}>`; // bildmall till listan
+//         flippedCardClasses[0].innerHTML = backCard;
+//         flippedCardClasses[1].innerHTML = backCard;
+//         changePlayerTurn();
+//         console.log(gameTurn);
+//     }
+//     flippedCardClasses = [];
+// }
+
+// function changePlayerTurn () {
+//     gameTurn = (gameTurn + 1) % 2;
+// }
