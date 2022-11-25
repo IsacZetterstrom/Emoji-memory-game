@@ -1,7 +1,7 @@
 // PLAYER SELECTION SECTION 1
 let playerOneInput = document.querySelector(".player-one");
 let playerTwoInput = document.querySelector(".player-two");
-let startSection = document.querySelector("div section");
+let startSection = document.querySelector("main section");
 let startButton = document.querySelector(".start-btn");
 
 // Lista på spelare med namn och score
@@ -53,19 +53,16 @@ let images = [ // lägger till bilder till korten
     "bilder/upside-down-face.png",
     "bilder/zany-face.png"
 ];
-let div = document.querySelector('div');
+let main = document.querySelector("main"); // ta ut main i DOM
 
 function createNewCard(cardImg){ //funktion för att lägga till kort
-    let main = document.querySelector('main');
     let newCardContent = `<img src=${cardImg}>`; // bildmall till listan
     let newCard = document.createElement("article"); // skapar elementet "article"
     newCard.innerHTML = newCardContent; //lägger i värdet från newCardContent till "newCard".
-    main.append(newCard);
+    main.append(newCard); // Lägg ut kortet
 } 
 
 function placeCards (){
-    let main = document.createElement('main')
-    div.append(main);
     for (let a = 0; a < 2; a++) { // gör 2 gånger för att få ut 2 av varje kort
         for (let i = 0; i < images.length; i++){
             createNewCard(hiddenCard); // skapar kort
@@ -84,126 +81,88 @@ function shuffleClass (){
 }
 
 function giveCardClass(){
-    let main = document.querySelector('main');
-    console.log(main);
-    console.log(classListIndex);
     for (let i = 0; i < classListIndex.length; i++){ //lägger till ett klassnamn till "classListIndex"
-        main.children[i].setAttribute('name', classListIndex[i]);
+        main.children[i].className = classListIndex[i];
         // För varje article i main, ge den ett klassnamn från classListIndex[i]
     }
 }
 
-function sideBar(){
+// FIXA ------ ÄNDRA SIDEBAR
+function updateDisplays() {
     let currentPlayer = players[gameTurn];
-    let asideContent = `<h3>${currentPlayer.name}s tur</h3> 
-    <h4>Poäng</h4> 
-    <p>${playerOne.name}: ${playerOne.score}</p> 
-    <p>${playerTwo.name}: ${playerTwo.score}</p>` // skapar en mall för sidobar i spelet.
-    const asideElement = document.createElement("aside");
-    asideElement.innerHTML = asideContent;
-    div.append(asideElement);
+    let asideContent = `<h3>${currentPlayer.name}s tur</h3>
+    <h4>Poäng</h4>
+    <p>${playerOne.score}</p>
+    <p>${playerTwo.score}</p>`;
+}
+function sideBar(){
+    updateDisplays()
+    let currentPlayer = players[gameTurn];
+    let asideContent = `<h3>${currentPlayer.name}s tur</h3>
+    <h4>Poäng</h4>
+    <p>${playerOne.score}</p>
+    <p>${playerTwo.score}</p>`; // skapar en mall för sidobar i spelet.
+    const container = document.querySelector(".wrap-container");
+    const aside = document.createElement("aside");
+    aside.innerHTML = asideContent;
+    container.append(aside);
 }
 
 // const articleListener = document.querySelectorAll('article');
-let clickedArticles = [];
-const articles = document.querySelectorAll('article');
-function createArticleListener() {
-    let article = document.querySelectorAll('article');
-    console.log(article);
-    article.forEach( a => {
-        a.addEventListener('click', () => {
-            clickedArticles.push(a);
-            flipCard(article, a);
+
+function addArticleListener() {
+    const articleListener = document.querySelectorAll('article');
+    for (const article of articleListener) {
+        article.addEventListener('click', (event) => {
+            flippedCard(event.currentTarget)
         });
-    });
-}
-
-function flipCard(articles, article) {
-    article.style.pointerEvents = "none";
-    console.log(article.getAttribute('name'));
-    if( clickedArticles.length == 2) {
-        // Gör alla kort oklickbara
-        for(art of articles) { art.style.pointerEvents = "none"; };
-        if(clickedArticles[0].getAttribute('name') == clickedArticles[1].getAttribute('name')) {
-            // Sätta till attribute isället för klass
-            clickedArticles.forEach(article => article.classList.add('flipped'));
-            updateScore();
-            updateDisplay();
-            
-        } else {
-            setTimeout(() => {
-                clickedArticles.forEach(article => {
-                    article.innerHTML = `<img src=${hiddenCard}>`;
-                });
-            }, 1500);
-            gameTurn = (gameTurn + 1) % 2;
-            updateDisplay();
-        }
-        setTimeout(() => {
-            // vänta en halv sekund innan man gör korten klickbara igen
-            for(art of articles) { art.style.pointerEvents = "all"; };
-            clickedArticles = [];
-            for(art of articles) {
-                // om article attributen är flipped islället för klass
-                if(art.className == 'flipped') {
-                    art.style.pointerEvents = "none";
-                }
-            }
-        }, 1500);
-        gameEnd();
     }
-
-    article.innerHTML = `<img src=${images[article.getAttribute('name')]}>`;
 }
 
-function updateScore() {
-    let currentPlayer = players[gameTurn];
-    currentPlayer.score += 1;
+let flipCount = 0;
+let flippedCardClasses= [];
+function flippedCard (target){
+    
+    if (flipCount == 2) {
+        compareFlippedCards();
+        flipCount = 0;
+    };
+    let realCard = `<img src=${images[target.className]}>`;
+    target.innerHTML = realCard;
+    flippedCardClasses.push(target)
+    flipCount++;
 }
 
-function updateDisplay() {
-    let currentPlayer = players[gameTurn];
-    let aside = document.querySelector('aside');
-    aside.innerHTML = `<h3>${currentPlayer.name}s tur</h3>
-    <h4>Poäng</h4>
-    <p>${playerOne.name}: ${playerOne.score}</p>
-    <p>${playerTwo.name}: ${playerTwo.score}</p>`; // skapar en mall för sidobar i spelet.
-}
-
-function resetGame() {
-    gameTurn = 0;
-    playerOne.score = 0;
-    playerTwo.score = 0;
-    classListIndex = [];
-    clickedArticles = [];
-}
-
-function gameEnd() {
-    let main = document.querySelector('main');
-    let aside = document.querySelector('aside');
-    if(playerOne.score + playerTwo.score >= 12) {
-        alert("Game End");
-        setTimeout(() => {
-            main.remove();
-            aside.remove();
-            resetGame();
-            startGame();
-        }, 5000);
-        
+function compareFlippedCards () {
+    if (flippedCardClasses[0].className == flippedCardClasses[1].className){
+        console.log(flippedCardClasses);
+        playerOne.score++;
+        console.log(playerOne.score);
+    } else if (flippedCardClasses[0].className != flippedCardClasses[1].className){
+        let backCard = `<img src=${hiddenCard}>`; // bildmall till listan
+        flippedCardClasses[0].innerHTML = backCard;
+        flippedCardClasses[1].innerHTML = backCard;
+        changePlayerTurn();
+        console.log(gameTurn);
     }
-
+    flippedCardClasses = [];
 }
+
+function changePlayerTurn () {
+    gameTurn = (gameTurn + 1) % 2;
+}
+
+
 
 function startGame() { //funktioner som kallas på när spelet startas.
     removePlayerSelection();
-    placeCards();
     sideBar();
+    placeCards();
     shuffleClass();
     giveCardClass();
-    createArticleListener();
+    addArticleListener();
 }
 
-div.setAttribute("flipped", "flipped");
 // TODO
 /*
 
