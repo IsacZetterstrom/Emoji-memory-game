@@ -88,10 +88,9 @@ function giveCardClass(){
     }
 }
 
-// FIXA ------ ÄNDRA SIDEBAR
-function updateDisplays() {
-    let aside = document.querySelector("aside");
-    let currentPlayer = players[gameTurn];
+function updateDisplays() { //funktion för att uppdatera allt i sidebar.
+    let aside = document.querySelector("aside"); 
+    let currentPlayer = players[gameTurn]; //tar in spelare av gameturn (från players listan) och lägger in i currentplayer.
     let asideContent = `<h3>${currentPlayer.name}s tur</h3>
     <h4>Poäng</h4>
     <p>${playerOne.score}</p>
@@ -100,18 +99,14 @@ function updateDisplays() {
 }
 
 function sideBar(){
-    let currentPlayer = players[gameTurn];
-    let asideContent = `<h3>${currentPlayer.name}s tur</h3>
-    <h4>Poäng</h4>
-    <p>${playerOne.score}</p>
-    <p>${playerTwo.score}</p>`; // skapar en mall för sidobar i spelet.
+    // skapar aside och sätter in i div
     const container = document.querySelector(".wrap-container");
-    const aside = document.createElement("aside");
-    aside.innerHTML = asideContent;
+    let aside = document.createElement("aside");
     container.append(aside);
+    updateDisplays(); // kallar på all data som ska sättas in i aside
 }
 
-// const articleListener = document.querySelectorAll('article');
+// skapa en eventListener för varje article
 function addArticleListener() {
     const articleListener = document.querySelectorAll('article');
     for (const article of articleListener) {
@@ -121,32 +116,57 @@ function addArticleListener() {
     }
 }
 
-let flippedCardsList = [];
-function flippedCard (card) {
-    flippedCardsList.push(card.className);
+let flippedCardsList = []; //lista på alla kort som är "flippade"
+function flippedCard (card) { //ska spara och jämnföra / kolla om 2 är valda
+    flippedCardsList.push(card);
+    card.innerHTML = `<img src=${images[card.className]}>`;
+    card.style.pointerEvents = "none"; // stänger av så man inte kan klicka på samma kort igen
+    card.setAttribute('name', 'flipped');
     if (flippedCardsList.length == 2){
-        compareFlippedCard ();
-        flippedCardsList = [];
+        for (const article of main.children) {
+            article.style.pointerEvents = "none";
+        }
+        compareFlippedCard();
+        setTimeout(() => {flippedCardsList = [];}, 1500);
     }
 }
 
-function compareFlippedCard () {
+function isCardFlipped () { //kollar på alla kort om name är "flipped"
+    for (const article of main.children) {
+        if (article.getAttribute('name') != 'flipped') {
+            //alla kort som inte är flipped görs klickbara igen.
+            article.style.pointerEvents = "all";
+        }
+    }
+}
+
+function compareFlippedCard () { //jämnför korten om de är en match eller inte.
     let currentPlayer = players[gameTurn];
-    if (flippedCardsList[0] == flippedCardsList[1]) {
+    if (flippedCardsList[0].className == flippedCardsList[1].className) {
+        // Match!
         currentPlayer.score++;
         updateDisplays();
-        console.log(currentPlayer.name);
+        isCardFlipped();
     } else {
+        // Not a match!
+        setTimeout(() => {
+            //tar bort flipped attributet och vänder tillbaka kortet same gör dem klickbara igen.
+            flippedCardsList.forEach((card) => {
+                card.removeAttribute('name');
+                card.style.pointerEvents = "all" //gör korten klickbara igen.
+                card.innerHTML = `<img src=${hiddenCard}>`;
+            });
+            isCardFlipped();
+        }, 1500);
         changePlayerTurn();
         updateDisplays();
-        console.log(gameTurn);
     }
 }
 
 function changePlayerTurn () {
+    //byter spelare (ger en value mellan 0 och 1)
     gameTurn = (gameTurn + 1) % 2;
 }
-
 
 function startGame() { //funktioner som kallas på när spelet startas.
     removePlayerSelection();
@@ -156,49 +176,3 @@ function startGame() { //funktioner som kallas på när spelet startas.
     giveCardClass();
     addArticleListener();
 }
-
-// TODO
-/*
-
-1. eventlistener för att veta när man klickar på korten
-
-*/
-
-
-
-
-
-
-
-// let flipCount = 0;
-// let flippedCardClasses= [];
-// function flippedCard (target){
-    
-//     if (flipCount == 2) {
-//         compareFlippedCards();
-//         flipCount = 0;
-//     };
-//     let realCard = `<img src=${images[target.className]}>`;
-//     target.innerHTML = realCard;
-//     flippedCardClasses.push(target)
-//     flipCount++;
-// }
-
-// function compareFlippedCards () {
-//     if (flippedCardClasses[0].className == flippedCardClasses[1].className){
-//         console.log(flippedCardClasses);
-//         playerOne.score++;
-//         console.log(playerOne.score);
-//     } else if (flippedCardClasses[0].className != flippedCardClasses[1].className){
-//         let backCard = `<img src=${hiddenCard}>`; // bildmall till listan
-//         flippedCardClasses[0].innerHTML = backCard;
-//         flippedCardClasses[1].innerHTML = backCard;
-//         changePlayerTurn();
-//         console.log(gameTurn);
-//     }
-//     flippedCardClasses = [];
-// }
-
-// function changePlayerTurn () {
-//     gameTurn = (gameTurn + 1) % 2;
-// }
