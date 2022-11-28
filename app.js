@@ -188,13 +188,12 @@ function compareFlippedCard () { //jämnför korten om de är en match eller int
             changePlayerTurn();
             updateDisplays();
         }, 1500);
-        
     }
 }
 
 function changePlayerTurn () {
     //byter spelare (ger en value mellan 0 och 1)
-    gameTurn = (gameTurn + 12) % 2;
+    gameTurn = (gameTurn + 1) % 2;
 }
 
 function customAlert (winner) {
