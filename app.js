@@ -251,7 +251,10 @@ function clearBoard () {
     let alertSection = document.querySelector('.alert-section');
     main.remove();
     aside.remove();
-    alertSection.remove();
+    // Bråkig, kollar om alertSection finns
+    if (alertSection != null) {
+        alertSection.remove(); 
+    }
     let newMain = document.createElement('main');
     container.append(newMain);
 }
