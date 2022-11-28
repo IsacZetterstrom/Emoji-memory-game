@@ -188,7 +188,6 @@ function compareFlippedCard () { //jämnför korten om de är en match eller int
             changePlayerTurn();
             updateDisplays();
         }, 1500);
-        
     }
 }
 
