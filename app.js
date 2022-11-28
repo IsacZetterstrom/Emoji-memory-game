@@ -54,9 +54,8 @@ let images = [ // lägger till bilder till korten
     "bilder/zany-face.png"
 ];
 
-let main = document.querySelector("main"); // ta ut main i DOM
-
 function createNewCard(cardImg){ //funktion för att lägga till kort
+    let main = document.querySelector("main"); // ta ut main i DOM
     let newCardContent = `<img src=${cardImg}>`; // bildmall till listan
     let newCard = document.createElement("article"); // skapar elementet "article"
     newCard.innerHTML = newCardContent; //lägger i värdet från newCardContent till "newCard".
@@ -82,6 +81,7 @@ function shuffleClass (){
 }
 
 function giveCardClass(){
+    let main = document.querySelector("main"); // ta ut main i DOM
     for (let i = 0; i < classListIndex.length; i++){ //lägger till ett klassnamn till "classListIndex"
         main.children[i].className = classListIndex[i];
         // För varje article i main, ge den ett klassnamn från classListIndex[i]
@@ -93,14 +93,24 @@ function updateDisplays() { //funktion för att uppdatera allt i sidebar.
     let currentPlayer = players[gameTurn]; //tar in spelare av gameturn (från players listan) och lägger in i currentplayer.
     let asideContent = `<h3>${currentPlayer.name}s tur</h3>
     <h4>Poäng</h4>
-    <p>${playerOne.score}</p>
-    <p>${playerTwo.score}</p>`;
+    <p>${playerOne.name}: ${playerOne.score}</p>
+    <p>${playerTwo.name}: ${playerTwo.score}</p>`;
     aside.innerHTML = asideContent;
+    
+    let playAgainBtn = document.createElement('button');
+    playAgainBtn.innerText = 'Spela igen';
+    playAgainBtn.addEventListener('click', playAgain)
+
+    let reset = document.createElement('button');
+    reset.innerText = 'Välj nya spelare';
+    reset.addEventListener('click', resetGame);
+    aside.append(playAgainBtn);
+    aside.append(reset);
 }
 
 function sideBar(){
     // skapar aside och sätter in i div
-    const container = document.querySelector(".wrap-container");
+    let container = document.querySelector(".wrap-container");
     let aside = document.createElement("aside");
     container.append(aside);
     updateDisplays(); // kallar på all data som ska sättas in i aside
@@ -118,6 +128,7 @@ function addArticleListener() {
 
 let flippedCardsList = []; //lista på alla kort som är "flippade"
 function flippedCard (card) { //ska spara och jämnföra / kolla om 2 är valda
+    let main = document.querySelector("main"); // ta ut main i DOM
     flippedCardsList.push(card);
     card.innerHTML = `<img src=${images[card.className]}>`;
     card.style.pointerEvents = "none"; // stänger av så man inte kan klicka på samma kort igen
@@ -132,10 +143,23 @@ function flippedCard (card) { //ska spara och jämnföra / kolla om 2 är valda
 }
 
 function isCardFlipped () { //kollar på alla kort om name är "flipped"
+    let main = document.querySelector("main"); // ta ut main i DOM
     for (const article of main.children) {
         if (article.getAttribute('name') != 'flipped') {
             //alla kort som inte är flipped görs klickbara igen.
             article.style.pointerEvents = "all";
+        }
+    }
+}
+// playerOne.score == playerTwo.score ? alert("Oavgjort") : (playerOne.score > playerTwo.score ? alert("Player one wins") : alert("Player Two wins"))
+function isGameOver() {
+    if (playerOne.score + playerTwo.score == 1){
+        if (playerOne.score == playerTwo.score){
+            setTimeout(() => { customAlert('Oavgjort!') }, 250);
+        }else if (playerOne.score > playerTwo.score) {
+            setTimeout(() => { customAlert(playerOne.name) }, 250);
+        }else if (playerOne.score < playerTwo.score) {
+            setTimeout(() => { customAlert(playerTwo.name) }, 250);
         }
     }
 }
@@ -147,6 +171,8 @@ function compareFlippedCard () { //jämnför korten om de är en match eller int
         currentPlayer.score++;
         updateDisplays();
         isCardFlipped();
+        // kör en funktion som kollar om spelet är slut
+        isGameOver();
     } else {
         // Not a match!
         setTimeout(() => {
@@ -157,15 +183,69 @@ function compareFlippedCard () { //jämnför korten om de är en match eller int
                 card.innerHTML = `<img src=${hiddenCard}>`;
             });
             isCardFlipped();
+            changePlayerTurn();
+            updateDisplays();
         }, 1500);
-        changePlayerTurn();
-        updateDisplays();
+        
     }
 }
 
 function changePlayerTurn () {
     //byter spelare (ger en value mellan 0 och 1)
     gameTurn = (gameTurn + 1) % 2;
+}
+
+function customAlert (winner) {
+    let container = document.querySelector(".wrap-container");
+
+    let section = document.createElement('section');
+    section.classList.add('alert-section');
+
+    let header = document.createElement('h2');
+    header.innerText = "Spelet är över!"
+    let sectionText = document.createElement('p');
+    sectionText.innerText = 'Vinnare: ' + winner;
+
+    let playAgainBtn = document.createElement('button');
+    playAgainBtn.innerText = 'Spela igen';
+    playAgainBtn.addEventListener('click', playAgain)
+
+    let reset = document.createElement('button');
+    reset.innerText = 'Välj nya spelare';
+    reset.addEventListener('click', resetGame);
+    
+
+    section.append(header);
+    section.append(sectionText);
+    section.append(playAgainBtn);
+    section.append(reset);
+    container.append(section);
+}
+
+function resetGame () {
+    location.reload();
+}
+
+function playAgain () {
+    flippedCardsList = []
+    classListIndex = []
+    gameTurn = 0;
+    playerOne.score = 0;
+    playerTwo.score = 0;
+    clearBoard();
+    startGame();
+}
+
+function clearBoard () {
+    let main = document.querySelector("main"); // ta ut main i DOM
+    let aside = document.querySelector('aside');
+    let container = document.querySelector(".wrap-container");
+    let alertSection = document.querySelector('.alert-section');
+    main.remove();
+    aside.remove();
+    alertSection.remove();
+    let newMain = document.createElement('main');
+    container.append(newMain);
 }
 
 function startGame() { //funktioner som kallas på när spelet startas.
