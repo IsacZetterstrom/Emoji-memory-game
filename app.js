@@ -19,6 +19,8 @@ let gameTurn = 0;
 
 function removePlayerSelection() { //tar bort selection när man trycker på knappen "starta spelet"
     startSection.remove();
+    let div = document.querySelector('body div');
+    div.classList.add('wrap-container');
 }
 
 function getPlayerNames() { //tar emot spelarnas namn som är inskrivna
@@ -196,10 +198,13 @@ function changePlayerTurn () {
 }
 
 function customAlert (winner) {
-    let container = document.querySelector(".wrap-container");
+    let container = document.querySelector("main");
 
     let section = document.createElement('section');
     section.classList.add('alert-section');
+
+    let imgdiv = document.createElement('div');
+    imgdiv.classList.add('img-div');
 
     let header = document.createElement('h2');
     header.innerText = "Spelet är över!"
@@ -213,13 +218,17 @@ function customAlert (winner) {
     let reset = document.createElement('button');
     reset.innerText = 'Välj nya spelare';
     reset.addEventListener('click', resetGame);
-    
 
+    section.append(imgdiv);
     section.append(header);
     section.append(sectionText);
     section.append(playAgainBtn);
     section.append(reset);
     container.append(section);
+    setTimeout(() => {
+        section.style.transform = 'rotate(360deg)';
+        section.style.transition = '1.5s cubic-bezier(0.75, 0.4, 0.4, 1.4)';    
+    }, 1);
 }
 
 function resetGame () {
