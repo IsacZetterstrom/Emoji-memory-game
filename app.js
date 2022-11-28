@@ -155,7 +155,7 @@ function isCardFlipped () { //kollar på alla kort om name är "flipped"
 }
 // playerOne.score == playerTwo.score ? alert("Oavgjort") : (playerOne.score > playerTwo.score ? alert("Player one wins") : alert("Player Two wins"))
 function isGameOver() {
-    if (playerOne.score + playerTwo.score == 1){
+    if (playerOne.score + playerTwo.score == 12){
         if (playerOne.score == playerTwo.score){
             setTimeout(() => { customAlert('Oavgjort!') }, 250);
         }else if (playerOne.score > playerTwo.score) {
