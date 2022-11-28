@@ -36,7 +36,7 @@ function getPlayerNames() { //tar emot spelarnas namn som är inskrivna
 
 startButton.addEventListener('click', getPlayerNames);
 // END PLAYER SELECTION SECTION 1
-// -----------------------------------------------------------------------
+// ----------------------------------------------------------
 // GAME SECTION
 
 let classListIndex = []; // Lista för att lagra våra class nummer
